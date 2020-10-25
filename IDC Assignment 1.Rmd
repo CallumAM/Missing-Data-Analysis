@@ -194,3 +194,43 @@ minput_bp_cor = cor(x = minput, y = databp$bloodp, method="pearson")
 minput_dose_cor ; minput_bp_cor
 
 ```
+
+
+
+
+Question 4c
+
+
+```{r}
+
+#Use the lm function for recoverytime matched with dose and bp
+fitreco = lm(databp$recovtime ~ databp$logdose + databp$bloodp)
+
+#Briefly sense check this model using graphs
+
+plot(fitreco$fitted.values,residuals(fitreco), xlab = "Fitted values", ylab = "Residuals")
+qqnorm(rstandard(fitreco))
+qqline(rstandard(fitreco),col=2)
+
+#Now calculate the new values for reco time using the linear model. Our missing values are at index 4, 10 and 22.
+
+predreco = predict(fitreco, newdata = databp)
+
+
+
+#Now rewrite the NAs in the data using this model
+reg_reco = ifelse(is.na(databp$recovtime) == TRUE, predreco, databp$recovtime)
+
+mean_rinput = mean(reg_reco)
+sd_rinput = sd(reg_reco)/sqrt(length(reg_reco))
+
+mean_rinput ; sd_rinput
+
+rinput_dose_cor = cor(x = reg_reco, y = databp$logdose, method="pearson")
+
+rinput_bp_cor = cor(x = reg_reco, y = databp$bloodp, method="pearson")
+
+rinput_dose_cor ; minput_bp_cor
+
+
+```
