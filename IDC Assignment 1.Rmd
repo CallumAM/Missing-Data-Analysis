@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Code Attribution:
+Incomplete Data Analysis Workshop1 solutions -
+
+<https://learn-eu-central-1-prod-fleet01-xythos.s3.eu-central-1.amazonaws.com/5d1b15b77a8ac/8552382?response-cache-control=private%2C%20max-age%3D21600&response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27solutions_workshop_1.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201025T120000Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PL5M5HI5WH%2F20201025%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Signature=c9581a6ab6ebd2612e42cf7c5f00b0071f07d483da1c2146170b4cce168abaa8>
+
+
+```{r}
+
+set.seed(1)
+
+#First define the variables, where rnorm(n) draws n random variables under a normal distribution, with default mean = 0 and sd = 1
+
+n = 500
+
+Z1 = rnorm(n)
+Z2 = rnorm(n)
+Z3 = rnorm(n)
+
+Y1 = 1 + Z1
+Y2 = 5 + (2 * Z1) + Z2
+
+
+a = 2
+b = 0
+
+missing = a * (Y1 - 1) + b  * (Y2 - 5) + Z3 <0
+
+#ind_missing creates an index of TRUE or FALSE values depending on wether or not a value in the set missing is < Z1
+
+ind_missing = which(missing == TRUE)
+
+#Then y2_obs and y_mis uses the index to decide which values are missing in our currently fully observed set of Y2
+
+Y2_obs = Y2[-ind_missing]
+Y2_mis = Y2[ind_missing]
+
+#Then we show a density plot of Y2 and Y2 without missing values (Y_obs).
+
+plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
+     main = "Y2", ylim =c(0, 0.3))
+lines(density(Y2_obs), lwd = 2, col = "red")
+
+legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"), lty =c(1,1), lwd =c(2,2), bty ="n")
+
+```
+
