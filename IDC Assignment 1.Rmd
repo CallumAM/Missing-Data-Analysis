@@ -50,4 +50,45 @@ lines(density(Y2_obs), lwd = 2, col = "red")
 legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"), lty =c(1,1), lwd =c(2,2), bty ="n")
 
 ```
+Question 3 c
+```{r}
+set.seed(1)
+
+#It's not necessary to fully copy the code from 3a but I have done anyway, just altering the values of a & b, just in case the code is run independently of 3a.
+
+n = 500
+
+Z1 = rnorm(n)
+Z2 = rnorm(n)
+Z3 = rnorm(n)
+
+Y1 = 1 + Z1
+Y2 = 5 + (2 * Z1) + Z2
+
+
+a = 0
+b = 2
+
+
+missing = a * (Y1 - 1) + b  * (Y2 - 5) + Z3 <0
+
+
+ind_missing = which(missing == TRUE)
+
+
+Y2_obs = Y2[-ind_missing]
+Y2_mis = Y2[ind_missing]
+
+
+plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
+     main = "Y2", ylim =c(0, 0.3))
+lines(density(Y2_obs), lwd = 2, col = "red")
+
+legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"), lty =c(1,1), lwd =c(2,2), bty ="n")
+
+
+
+
+
+```
 
