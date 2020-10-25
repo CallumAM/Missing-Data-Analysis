@@ -67,8 +67,8 @@ Question 3b
 ```{r}
 plot(Y2_mis)
 
-fit = lm(Y2_mis ~ Y2)
-plot(fit)
+fit = lm(Y2_obs ~ Y1[ind_missing])
+
 
 
 
