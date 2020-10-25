@@ -195,6 +195,7 @@ Question 4a
 
 
 ```{r}
+set.seed(1)
 load("databp.Rdata")
 
 #Code attribution is week2 workshop solutions, url at top
@@ -228,6 +229,7 @@ Question 4b
 
 
 ```{r}
+set.seed(1)
 #Take the mean of recorvery time, discarding NA's
 meancomp = mean(databp$recovtime, na.rm = TRUE)
 
@@ -257,7 +259,7 @@ Question 4c
 
 
 ```{r}
-
+set.seed(1)
 #Use the lm function for recoverytime matched with dose and bp
 fitreco = lm(databp$recovtime ~ databp$logdose + databp$bloodp)
 
@@ -290,11 +292,11 @@ rinput_dose_cor ; rinput_bp_cor
 Question 4d
 
 ```{r}
-
+set.seed(1)
 #Use the lm function for recovery time matched with dose and bp
 fitreco = lm(databp$recovtime ~ databp$logdose + databp$bloodp)
 
-storeco = predict(fitreco, newdata = databp)+ rnorm(n, 0,summary(fitreco)$sigma)
+storeco = predict(fitreco, newdata = databp)+ rnorm(25, 0,summary(fitreco)$sigma)
 
 
 
@@ -311,6 +313,6 @@ sinput_dose_cor = cor(x = sto_reco, y = databp$logdose, method="pearson")
 sinput_bp_cor = cor(x = sto_reco, y = databp$bloodp, method="pearson")
 
 sinput_dose_cor ; sinput_bp_cor
-
+sto_reco
 
 ```
