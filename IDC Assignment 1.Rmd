@@ -144,22 +144,53 @@ load("databp.Rdata")
 
 #Code attribution is week2 workshop solutions, url at top
 
-#Remove all NA values from the recovtime data set
-comp = which(is.na(databp$recovtime) == FALSE)
+#Create an index of which values are not NAs
+ind = which(is.na(databp$recovtime) == FALSE)
 
-#then calculate the mean and standard deviation
-meancomp = mean(comp)
-sdcomp = sd(comp)
+#then calculate the mean and standard deviation, na.rm = TRUE discounts any NAs from the calculation
+meancomp = mean(databp$recovtime, na.rm = TRUE)
+sdcomp = sd(databp$recovtime, na.rm = TRUE)/sqrt(length(comp))
+
+
 
 meancomp ; sdcomp
 
 
 
-#Calculating the Pearson coeficcient using code from Quick-R by data camp, url at top
+#Calculating the Pearson coeficcient using code from Quick-R by data camp, url at top.
 
-cor(x = databp$recovtime, y = databp$longdose, use="complete.obs", method="pearson")
+#x= and y= specify our data to compare, use="complete.obs" instructs R to handle missing data using listwise deletion, and method is fairly self explanatory.
+
+reco_dose_cor = cor(x = databp$recovtime, y = databp$logdose, use="complete.obs", method="pearson")
+
+reco_bp_cor = cor(x = databp$recovtime, y = databp$bloodp, use="complete.obs", method="pearson")
+
+reco_dose_cor ; reco_bp_cor
+```
 
 
+Question 4b
 
+
+```{r}
+#Take the mean of recorvery time, discarding NA's
+meancomp = mean(databp$recovtime, na.rm = TRUE)
+
+#Write this mean into our data set, replacing NAs
+
+minput = ifelse(is.na(databp$recovtime) == TRUE, meancomp, databp$recovtime)
+
+
+#Then repeat previous code, use minput as our new data set for recovtime
+mean_minput = mean(minput)
+sd_minput = sd(minput)/sqrt(length(minput))
+
+mean_minput ; sd_minput
+
+minput_dose_cor = cor(x = minput, y = databp$logdose, method="pearson")
+
+minput_bp_cor = cor(x = minput, y = databp$bloodp, method="pearson")
+
+minput_dose_cor ; minput_bp_cor
 
 ```
