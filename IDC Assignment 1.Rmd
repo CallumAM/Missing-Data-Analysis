@@ -8,9 +8,18 @@ Incomplete Data Analysis Workshop1 solutions -
 
 <https://learn-eu-central-1-prod-fleet01-xythos.s3.eu-central-1.amazonaws.com/5d1b15b77a8ac/8552382?response-cache-control=private%2C%20max-age%3D21600&response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27solutions_workshop_1.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201025T120000Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PL5M5HI5WH%2F20201025%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Signature=c9581a6ab6ebd2612e42cf7c5f00b0071f07d483da1c2146170b4cce168abaa8>
 
+Incomplete Data Analysis Workshop 2 solutions - 
+<https://learn-eu-central-1-prod-fleet01-xythos.s3.eu-central-1.amazonaws.com/5d1b15b77a8ac/9025404?response-cache-control=private%2C%20max-age%3D21600&response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27solutions_workshop_2.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201025T180000Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PL5M5HI5WH%2F20201025%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Signature=723096adbbeefa8485c25fd13549866b74874e89fcb1ed5a60b1b7555416e13c>
 
+Incomplete Data Analysis Week 3 Single_Imputation_Example -
+<https://www.learn.ed.ac.uk/bbcswebdav/pid-5372532-dt-content-rid-16227115_1/xid-16227115_1>
+
+Quick-R by Data Camp - 
+<https://www.statmethods.net/stats/correlations.html>
 
 Question 3a
+
+
 ```{r}
 
 set.seed(1)
@@ -50,7 +59,29 @@ lines(density(Y2_obs), lwd = 2, col = "red")
 legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"), lty =c(1,1), lwd =c(2,2), bty ="n")
 
 ```
+
+
+Question 3b
+
+
+```{r}
+plot(Y2_mis)
+
+fit = lm(Y2_mis ~ Y2)
+plot(fit)
+
+
+
+
+
+
+
+```
+
+
 Question 3 c
+
+
 ```{r}
 set.seed(1)
 
@@ -94,3 +125,41 @@ legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"
 
 ```
 
+
+Question 3d
+
+```{r}
+
+
+
+```
+
+
+
+Question 4a
+
+
+```{r}
+load("databp.Rdata")
+
+#Code attribution is week2 workshop solutions, url at top
+
+#Remove all NA values from the recovtime data set
+comp = which(is.na(databp$recovtime) == FALSE)
+
+#then calculate the mean and standard deviation
+meancomp = mean(comp)
+sdcomp = sd(comp)
+
+meancomp ; sdcomp
+
+
+
+#Calculating the Pearson coeficcient using code from Quick-R by data camp, url at top
+
+cor(x = databp$recovtime, y = databp$longdose, use="complete.obs", method="pearson")
+
+
+
+
+```
