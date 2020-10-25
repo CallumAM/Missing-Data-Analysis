@@ -41,7 +41,7 @@ ind_missing = which(missing == TRUE)
 Y2_obs = Y2[-ind_missing]
 Y2_mis = Y2[ind_missing]
 
-#Then we show a density plot of Y2 and Y2 without missing values (Y_obs).
+#Then we show a density plot of Y2 and Y2 without missing values (Y_obs), code heavily borrowed from workshop 1 solutions, url at top of document.
 
 plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
      main = "Y2", ylim =c(0, 0.3))
@@ -55,6 +55,8 @@ Question 3 c
 set.seed(1)
 
 #It's not necessary to fully copy the code from 3a but I have done anyway, just altering the values of a & b, just in case the code is run independently of 3a.
+
+#For more comments on the code see Q3a
 
 n = 500
 
