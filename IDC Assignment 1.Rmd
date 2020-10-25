@@ -280,7 +280,37 @@ rinput_dose_cor = cor(x = reg_reco, y = databp$logdose, method="pearson")
 
 rinput_bp_cor = cor(x = reg_reco, y = databp$bloodp, method="pearson")
 
-rinput_dose_cor ; minput_bp_cor
+rinput_dose_cor ; rinput_bp_cor
+
+
+```
+
+
+
+Question 4d
+
+```{r}
+
+#Use the lm function for recovery time matched with dose and bp
+fitreco = lm(databp$recovtime ~ databp$logdose + databp$bloodp)
+
+storeco = predict(fitreco, newdata = databp)+ rnorm(n, 0,summary(fitreco)$sigma)
+
+
+
+#Now rewrite the NAs in the data using this model
+sto_reco = ifelse(is.na(databp$recovtime) == TRUE, storeco, databp$recovtime)
+
+mean_sinput = mean(sto_reco)
+sd_sinput = sd(sto_reco)/sqrt(length(sto_reco))
+
+mean_sinput ; sd_sinput
+
+sinput_dose_cor = cor(x = sto_reco, y = databp$logdose, method="pearson")
+
+sinput_bp_cor = cor(x = sto_reco, y = databp$bloodp, method="pearson")
+
+sinput_dose_cor ; sinput_bp_cor
 
 
 ```
