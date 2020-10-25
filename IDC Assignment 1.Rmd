@@ -39,11 +39,11 @@ Y2 = 5 + (2 * Z1) + Z2
 a = 2
 b = 0
 
-missing = a * (Y1 - 1) + b  * (Y2 - 5) + Z3 <0
+missingMCAR = a * (Y1 - 1) + b  * (Y2 - 5) + Z3 <0
 
 #ind_missing creates an index of TRUE or FALSE values depending on wether or not a value in the set missing is < Z1
 
-ind_missing = which(missing == TRUE)
+ind_missing = which(missingMCAR == TRUE)
 
 #Then y2_obs and y_mis uses the index to decide which values are missing in our currently fully observed set of Y2
 
@@ -65,16 +65,39 @@ Question 3b
 
 
 ```{r}
-plot(Y2_mis)
+set.seed(1)
 
-fit = lm(Y2_obs ~ Y1[ind_missing])
+#First find a linear regression model using R's lm function
 
-
-
-
+fit = lm(Y2_obs ~ Y1[-ind_missing])
 
 
+#Add random noise
 
+pred_reg_Y2 = predict(fit, newdata = list(Y2)) + rnorm(n, 0,summary(fit)$sigma)
+
+#Replace missing values with stochastic regression model data
+
+reg_Y2 = ifelse((missing) == TRUE, pred_reg_Y2, Y2)
+
+#And plot
+
+
+plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
+     main = "Y2", ylim =c(0, 0.3))
+lines(density(reg_Y2), lwd = 2, col = "green")
+
+legend(8, 0.25, legend =c("Complete data", "Regression Input"),col =c("blue", "green"), lty =c(1,1), lwd =c(2,2), bty ="n")
+
+
+#A comprarison graph between Q3a and Q3b
+
+plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
+     main = "Y2", ylim =c(0, 0.3))
+lines(density(reg_Y2), lwd = 2, col = "green")
+lines(density(Y2_obs), lwd = 2, col = "red")
+
+legend(8, 0.25, legend =c("Complete data", "Regression Input","Observed Data"),col =c("blue", "green", "red"), lty =c(1,1,1), lwd =c(2,2,2), bty ="n")
 
 ```
 
@@ -103,25 +126,25 @@ a = 0
 b = 2
 
 
-missing = a * (Y1 - 1) + b  * (Y2 - 5) + Z3 <0
+missingMNAR = a * (Y1 - 1) + b  * (Y2 - 5) + Z3 <0
 
 
-ind_missing = which(missing == TRUE)
+ind_missingMNAR = which(missingMNAR == TRUE)
 
 
-Y2_obs = Y2[-ind_missing]
-Y2_mis = Y2[ind_missing]
+Y2_obs_MNAR = Y2[-ind_missingMNAR]
+Y2_mis_MNAR = Y2[ind_missingMNAR]
 
 
 plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
      main = "Y2", ylim =c(0, 0.3))
-lines(density(Y2_obs), lwd = 2, col = "red")
+lines(density(Y2_obs_MNAR), lwd = 2, col = "red")
 
 legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"), lty =c(1,1), lwd =c(2,2), bty ="n")
 
 
-
-
+#A small line to see how much data is missing
+length(Y2_mis_MNAR)
 
 ```
 
@@ -129,7 +152,39 @@ legend(8, 0.25, legend =c("Complete data", "Observed data"),col =c("blue", "red"
 Question 3d
 
 ```{r}
+set.seed(1)
 
+#First find a linear regression model using R's lm function
+
+fitMNAR = lm(Y2_obs_MNAR ~ Y1[-ind_missingMNAR])
+
+
+#Add random noise
+
+pred_reg_Y2_MNAR = predict(fitMNAR, newdata = list(Y2)) + rnorm(n, 0,summary(fit)$sigma)
+
+#Replace missing values with stochastic regression model data
+
+reg_Y2_MNAR = ifelse((missingMNAR) == TRUE, pred_reg_Y2_MNAR, Y2)
+
+#And plot
+
+
+plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
+     main = "Y2 with MNAR", ylim =c(0, 0.3))
+lines(density(reg_Y2_MNAR), lwd = 2, col = "green")
+
+legend(8, 0.25, legend =c("Complete data", "MNAR Regression Input"),col =c("blue", "green"), lty =c(1,1), lwd =c(2,2), bty ="n")
+
+
+#A comprarison graph between Q3a and Q3b
+
+plot(density(Y2), lwd = 2, col = "blue", xlab =expression(Y[2]),
+     main = "Y2", ylim =c(0, 0.3))
+lines(density(reg_Y2_MNAR), lwd = 2, col = "green")
+lines(density(Y2_obs_MNAR), lwd = 2, col = "red")
+
+legend(8, 0.25, legend =c("Complete data", "Regression Input","Observed Data"),col =c("blue", "green", "red"), lty =c(1,1,1), lwd =c(2,2,2), bty ="n")
 
 
 ```
@@ -206,11 +261,6 @@ Question 4c
 #Use the lm function for recoverytime matched with dose and bp
 fitreco = lm(databp$recovtime ~ databp$logdose + databp$bloodp)
 
-#Briefly sense check this model using graphs
-
-plot(fitreco$fitted.values,residuals(fitreco), xlab = "Fitted values", ylab = "Residuals")
-qqnorm(rstandard(fitreco))
-qqline(rstandard(fitreco),col=2)
 
 #Now calculate the new values for reco time using the linear model. Our missing values are at index 4, 10 and 22.
 
