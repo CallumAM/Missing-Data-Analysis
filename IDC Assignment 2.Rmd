@@ -1,0 +1,33 @@
+---
+title: "IDA Assignment 2"
+output: html_document
+---
+
+##IDA ASSIGNMENT TWO
+
+```{r}
+#Code based on workshop 3, question 2, model answer
+
+#First load the required data
+load("dataex2.Rdata")
+#If you do not have maxLik installed, please un-comment the below line to do so
+#install.packages("maxLik")
+require(maxLik)
+
+#Define our log likelihood function
+log_like_q2 = function(param, data){
+  #Values for x and r are given by the input
+  x = data[,1]
+  r = data[,2]
+  #mu will be the parameter we're calculating the mle for
+  mu = param[1]
+  #Plug in the equation worked out earlier
+  #Note the norm function has an argument log, which if true gives the output as a log, so by taking the log there we don't need to take the log of the phi's again
+  sum (r*(dnorm(x, mu, 1.5, log = TRUE)) + (1 - r)*(pnorm(x, mu, 1.5, log = TRUE)))
+}
+
+#Now using the maxLik package we optimise the MLE to get our answer
+mle_q2 = maxLik(log_like_q2, data = dataex2, start = (mu = 1))
+summary(mle_q2)
+
+```

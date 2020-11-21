@@ -299,7 +299,6 @@ fitreco = lm(databp$recovtime ~ databp$logdose + databp$bloodp)
 storeco = predict(fitreco, newdata = databp)+ rnorm(25, 0,summary(fitreco)$sigma)
 
 
-
 #Now rewrite the NAs in the data using this model
 sto_reco = ifelse(is.na(databp$recovtime) == TRUE, storeco, databp$recovtime)
 
