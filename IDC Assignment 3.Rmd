@@ -1,0 +1,119 @@
+---
+title: "IDA Assignment 3"
+author: "Callum MacAskill"
+date: "21/12/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mice)
+load("NHANES2.Rdata")
+```
+# Question 1
+
+### 1a
+
+To get the percentage of rows with NA's, first we check which rows have NAs, then divide by the number of total rows in the data frame, before multiplying by 100 to get to percentages.
+```{r, include = FALSE, message = FALSE}
+data = nhanes
+#Row checking is done by applying the anyNA function to each row
+#This will return true if a row has an NA in any column or false otherwise
+#We then sum these trues and divide by the length of the dataframe
+(sum(apply(data, 1, function(x) anyNA(x)))/dim(data)[1])*100
+```
+It's 48% of rows that have NAs.
+
+### 1b
+
+```{r, include = FALSE, message = FALSE}
+#First impute the data using mices built in defaults, with seed 1
+impdata = mice(data, seed = 1, printFlag = FALSE)
+#Then create a linear model using mice's with command
+lmfit = with(impdata, lm(bmi ~ hyp+ age + chl))
+#Finally pool and display resaults, again using built in mice command
+poollmfit = pool(lmfit)
+poollmfit
+```
+Our output `poollmfit` is of class mipo, where the the level of affect from missingness is given by the size of lambda. Here we can see the highest value, and so the variable most effected by missingness in our data, is age.
+
+### 1c
+
+First rerun five times with the new seeds
+```{r, include = FALSE, message = FALSE}
+impdata2 = mice(data, seed = 2, printFlag = FALSE)
+lmfit2 = with(impdata2, lm(bmi ~ hyp+ age + chl))
+poollmfit2 = pool(lmfit2)
+
+impdata3 = mice(data, seed = 3, printFlag = FALSE)
+lmfit3 = with(impdata3, lm(bmi ~ hyp+ age + chl))
+poollmfit3 = pool(lmfit3)
+
+impdata4 = mice(data, seed = 4, printFlag = FALSE)
+lmfit4 = with(impdata4, lm(bmi ~ hyp+ age + chl))
+poollmfit4 = pool(lmfit4)
+
+impdata5 = mice(data, seed = 5, printFlag = FALSE)
+lmfit5 = with(impdata5, lm(bmi ~ hyp+ age + chl))
+poollmfit5 = pool(lmfit5)
+
+impdata6 = mice(data, seed = 6, printFlag = FALSE)
+lmfit6 = with(impdata6, lm(bmi ~ hyp+ age + chl))
+poollmfit6 = pool(lmfit6)
+```
+We've repeated everything as in Q1b, just with new seeds. Now lets compare results.
+
+
+```{r, include = FALSE, message = FALSE}
+#The subsetting below pulls out only the relevant columns, term and lambda
+poollmfit2[[3]][c(1,10)]
+poollmfit3[[3]][c(1,10)]
+poollmfit4[[3]][c(1,10)]
+poollmfit5[[3]][c(1,10)]
+poollmfit6[[3]][c(1,10)]
+```
+We can see that although age has the highest lambda most often (in seeds 2,3 and 6, not counting the intercept), that in seed 3 cholesterol is most affected by missingness, as is hypertension in seed 5.
+
+
+
+### 1d
+Now we repeat the analysis again with a higher M (m = 100)
+
+```{r, include = FALSE, message = FALSE}
+#The previous 4 lines of code for each seed can be condensed down to 1
+pool(with(mice(data, seed = 2, printFlag = FALSE, m = 100), lm(bmi ~ hyp+ age + chl)))[[3]][c(1,10)]
+pool(with(mice(data, seed = 3, printFlag = FALSE, m = 100), lm(bmi ~ hyp+ age + chl)))[[3]][c(1,10)]
+pool(with(mice(data, seed = 4, printFlag = FALSE, m = 100), lm(bmi ~ hyp+ age + chl)))[[3]][c(1,10)]
+pool(with(mice(data, seed = 5, printFlag = FALSE, m = 100), lm(bmi ~ hyp+ age + chl)))[[3]][c(1,10)]
+pool(with(mice(data, seed = 6, printFlag = FALSE, m = 100), lm(bmi ~ hyp+ age + chl)))[[3]][c(1,10)]
+```
+
+This would seem to be a good idea. A higher m, meaning more database copies created and imputed before being pooled back together, would reduce the effect of random chance through a larger number of receptions. Given that in q1c we can see the lambda for age has a range of (0.219, 0.654), a difference of over 300%, this would definitely seem to be an area we can improve on.
+Now, when repeating for m = 100, we can see our lambda for age now has a range of (0.309, 0.443), much more consistent results. 
+
+The pattern does not just apply to lambda for age. See below the summary of resulst for default m and m = 100, with seed 2.
+
+```{r}
+#Recalculate and name the m=100 dataframe for seed 2
+m100 = pool(with(mice(data, seed = 2, printFlag = FALSE, m = 100), lm(bmi ~ hyp+ age + chl)))
+
+#First display with default m
+summary(poollmfit2)
+#Then after display with the increased m
+summary(m100)
+```
+
+We can see that the standard error is down for all values except cholesterol (where it has seen a slight increase). This would suggest we get a more a accurate estimation from m = 100, however in a real life setting more tests would need to be carried out (change of seeds, m, ect).
+
+
+
+
+
+
+\newpage
+
+
+
+# Question 2
+
+### 2a
