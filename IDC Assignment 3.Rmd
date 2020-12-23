@@ -186,10 +186,12 @@ First, what does it look like *compute predicted values then pool* using Rubens 
 
 $$
 \hat{y} = \frac{1}{M} \sum^M_{m = 1} \hat{y}^{(m)}
-\\
+$$
+\begin{center}
 where
-\\
-\widehat{y}^{(m)} = \hat{\beta}^{(m)}_0 + \hat{\beta_1}^{(m)}x_1 + ..... + \hat{\beta}_n^{(m)}x_n + \epsilon
+\end{center}
+$$
+\hat{y}^{(m)} = \hat{\beta}^{(m)}_0 + \hat{\beta_1}^{(m)}x_1 + ..... + \hat{\beta}_n^{(m)}x_n + \epsilon
 $$
 
 That is, we calculate out values for beta in each m database, then pool.
@@ -216,9 +218,9 @@ But if we expand our first set of equations we can clearly see these are equival
 <br>
 
 $$
-\widehat{y} = \frac{1}{M} ( \sum^M_{m = 1} \hat{\beta}^{(m)}_0 + \hat{\beta_1}^{(m)}x_1 + ..... + \hat{\beta}_n^{(m)}x_n + \epsilon) \\
-
-\widehat{y} = \frac{1}{M}  \sum^M_{m = 1} \hat{\beta}^{(m)}_0x_0
+\hat{y} = \frac{1}{M} ( \sum^M_{m = 1} \hat{\beta}^{(m)}_0 + \hat{\beta_1}^{(m)}x_1 + ..... + \hat{\beta}_n^{(m)}x_n + \epsilon)
+\\
+\hat{y} = \frac{1}{M}  \sum^M_{m = 1} \hat{\beta}^{(m)}_0x_0
 + \frac{1}{M} \sum^M_{m = 1} \hat{\beta}^{(m)}_1x_1
 + ... + \frac{1}{M} \sum^M_{m = 1} \hat{\beta}^{(m)}_nx_n + \frac{1}{M}  \sum^M_{m = 1} \epsilon
 \\
